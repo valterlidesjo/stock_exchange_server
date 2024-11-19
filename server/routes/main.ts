@@ -113,3 +113,52 @@ router.get("/logout", (req: any, res: any) => {
   });
   return res.status(200).json({ message: "Logged out successfully" });
 });
+
+
+router.post("/saveTicker", authMiddleware, async (req: any, res: any) => {
+  const { ticker } = req.body; // Få aktiedata från request
+  const userId = req.userId; // `authMiddleware` lägger till userId i request
+
+  if (!ticker) {
+    return res.status(400).json({ message: "Stock data is required" });
+  }
+
+  try {
+    // Hämta användare från databasen
+    const user = await User.findById(userId); // Eller motsvarande databasoperation
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Spara aktien om den inte redan finns i sparade aktier
+    if (!user.savedStocks.includes(ticker)) {
+      user.savedStocks.push(ticker);
+      await user.save(); // Spara till databasen
+    }
+
+    res.status(200).json({
+      message: "Stock saved successfully",
+      savedStocks: user.savedStocks,
+    });
+  } catch (error) {
+    console.error("Error saving stock:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.get("/savedTickers", authMiddleware, async (req: any, res: any) => {
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ savedStocks: user.savedStocks });
+  } catch (error) {
+    console.error("Error fetching saved stocks:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
