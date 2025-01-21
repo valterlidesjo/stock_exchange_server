@@ -36,10 +36,34 @@ const authMiddleware = (req: any, res: any, next: Function) => {
   }
 };
 
-router.get("/test-cookies", (req, res) => {
-  console.log("Cookies received on mobile:", req.cookies);
-  res.status(200).json({ cookies: req.cookies });
+router.get("/test-cookie-set", (req, res) => {
+  const testCookieValue = "test-cookie-value";
+
+  // Sätt en testcookie
+  res.cookie("testCookie", testCookieValue, {
+    httpOnly: true, // Gör cookien otillgänglig för JavaScript
+    secure: true, // Kräver HTTPS
+    sameSite: "none", // Kräver att både klient och server är korrekt konfigurerade
+  });
+
+  console.log("Test cookie set:", testCookieValue);
+  res.status(200).json({ message: "Test cookie set" });
 });
+
+router.get("/test-cookie-read", (req, res) => {
+  // Läs cookies som skickats från klienten
+  console.log("Cookies received:", req.cookies);
+
+  if (req.cookies.testCookie) {
+    res.status(200).json({
+      message: "Cookie received",
+      cookieValue: req.cookies.testCookie,
+    });
+  } else {
+    res.status(400).json({ message: "No cookie received" });
+  }
+});
+
 
 
 /*getting sign up info and setting in mongo*/
@@ -94,7 +118,7 @@ router.post("/loginForm", async (req: any, res: any) => {
       sameSite: "none",
     });
     console.log("Cookie set:", token);
-    
+
     return res.status(200).json({ message: "User logged in", user });
   } catch (error) {
     console.error("Error during login:", error);
