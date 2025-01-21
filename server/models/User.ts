@@ -1,5 +1,3 @@
-// import { model } from "mongoose";
-
 import mongoose, { model } from 'mongoose';
 
 

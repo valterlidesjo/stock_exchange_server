@@ -14,9 +14,16 @@ const PORT = 3000;
 //Connect to db
 connectDB();
 
+const corsOptions = {
+  origin: 'https://sillystocks.netlify.app', // Ersätt med din Netlify-URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Tillåtna HTTP-metoder
+  credentials: true, // Om cookies används
+};
+
+app.use(cors(corsOptions));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(cors({ origin: "https://sillystocks.netlify.app/", credentials: true }));
 app.use(express.static("public"));
 app.use(cookieParser());
 app.use("/", router);
