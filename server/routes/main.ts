@@ -1,3 +1,4 @@
+
 import express from "express";
 import { Router, Request, Response } from "express";
 import { User } from "../models/User.js";
@@ -10,8 +11,9 @@ const router = express.Router();
 /* authenticator för att kolla så att användaren är inloggad*/
 const authMiddleware = (req: any, res: any, next: Function) => {
   const token = req.cookies.token || req.headers["authorization"];
+  console.log(navigator.userAgent);
   console.log(token);
-  console.log("token funkar");
+  
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
