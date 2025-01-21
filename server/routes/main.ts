@@ -36,6 +36,12 @@ const authMiddleware = (req: any, res: any, next: Function) => {
   }
 };
 
+router.get("/test-cookies", (req, res) => {
+  console.log("Cookies received on mobile:", req.cookies);
+  res.status(200).json({ cookies: req.cookies });
+});
+
+
 /*getting sign up info and setting in mongo*/
 router.post("/signUpForm", async (req: any, res: any) => {
   const { userName, userPswrd, email } = req.body;
@@ -87,6 +93,8 @@ router.post("/loginForm", async (req: any, res: any) => {
       secure: true, // Kräver HTTPS
       sameSite: "none",
     });
+    console.log("Cookie set:", token);
+    
     return res.status(200).json({ message: "User logged in", user });
   } catch (error) {
     console.error("Error during login:", error);
