@@ -10,7 +10,8 @@ const router = express.Router();
 /* authenticator för att kolla så att användaren är inloggad*/
 const authMiddleware = (req: any, res: any, next: Function) => {
   const token = req.cookies.token || req.headers["authorization"];
-
+  console.log(token);
+  console.log("token funkar");
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -20,6 +21,8 @@ const authMiddleware = (req: any, res: any, next: Function) => {
       throw new Error("JWT_SECRET is not defined in environment variables.");
     }
     const decoded = jwt.verify(token, jwtSecret);
+
+
     if (typeof decoded !== "string" && "userId" in decoded) {
       req.userId = decoded.userId;
       next();
