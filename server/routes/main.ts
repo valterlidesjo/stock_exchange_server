@@ -82,8 +82,8 @@ router.post("/loginForm", async (req: any, res: any) => {
     });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      secure: true, // Kräver HTTPS
+      sameSite: "none",
     });
     return res.status(200).json({ message: "User logged in", user });
   } catch (error) {
