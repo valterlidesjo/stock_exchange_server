@@ -86,7 +86,6 @@ router.post("/loginForm", async (req: any, res: any) => {
       httpOnly: true,
       secure: true, // Kräver HTTPS
       sameSite: "none",
-      domain: "https://sillystocks.netlify.app",
     });
     return res.status(200).json({ message: "User logged in", user });
   } catch (error) {
